@@ -9,6 +9,7 @@ class Factura:
 
     def __init__(self, file_name):
         self.doc = xml.dom.minidom.parse(file_name)
+        self.name = file_name
 
     def get_fecha_comprobante(self):
         cfdi_emisor = self.doc.getElementsByTagName("cfdi:Comprobante")
@@ -36,6 +37,7 @@ class FacturaV2:
 
     def __init__(self, file_name):
         self.doc = ET.parse(file_name)
+        self.name = file_name
 
     def get_fecha_comprobante(self):
         root = self.doc.getroot()
@@ -56,10 +58,14 @@ class FacturaV2:
         return float(root.attrib.get("Total"))
 
     def get_all_taxes(self):
-        root = self.doc.getroot()
-        impuestos_tag = [children for children in root if "Impuestos" in children.tag]
-        impuestos = impuestos_tag[0]
-        return float(impuestos.attrib.get("TotalImpuestosTrasladados"))
+        try:
+            root = self.doc.getroot()
+            impuestos_tag = [children for children in root if "Impuestos" in children.tag]
+            impuestos = impuestos_tag[0]
+            return float(impuestos.attrib.get("TotalImpuestosTrasladados"))
+        except:
+            print("No se encontraron otros impuestos")
+            return None
 
     def get_conceptos(self):
         root = self.doc.getroot()
@@ -72,22 +78,27 @@ class FacturaV2:
 
     def get_iva(self):
         root = self.doc.getroot()
-        impuestos_tag = [children for children in root if "Impuestos" in children.tag]
-        impuestos = impuestos_tag[0]
-        traslados_tag = [children for children in impuestos]
-        traslados = traslados_tag[0]
-        traslado_n_tag = [children for children in traslados]
-        ivas = [children for children in traslado_n_tag if children.attrib.get("Impuesto") == "002"]
-        num = 0
-        for children in ivas:
-            n = float(children.attrib.get("Importe"))
-            num += n
-        return num
+        try:
+            impuestos_tag = [children for children in root if "Impuestos" in children.tag]
+            impuestos = impuestos_tag[0]
+            traslados_tag = [children for children in impuestos]
+            traslados = traslados_tag[0]
+            traslado_n_tag = [children for children in traslados]
+            ivas = [children for children in traslado_n_tag if children.attrib.get("Impuesto") == "002"]
+            num = 0
+            for children in ivas:
+                n = float(children.attrib.get("Importe"))
+                num += n
+            return num
+        except:
+            print("No se encontró IVA en factura ")
+            return None
 
 
 class Relacion:
 
     def __init__(self):
+        self.a_nombre = []
         self.a_fecha = []
         self.a_proveedor = []
         self.a_subtotal = []
@@ -98,6 +109,7 @@ class Relacion:
 
     def crear_df(self):
         data = {
+            'Nombre': self.a_nombre,
             'Fecha': self.a_fecha,
             'Proveedor': self.a_proveedor,
             'Subtotal': self.a_subtotal,
