@@ -64,7 +64,7 @@ class FacturaV2:
             impuestos = impuestos_tag[0]
             return float(impuestos.attrib.get("TotalImpuestosTrasladados"))
         except:
-            print("No se encontraron otros impuestos")
+            print("No se encontraron otros impuestos en factura " + self.name)
             return None
 
     def get_conceptos(self):
@@ -91,7 +91,7 @@ class FacturaV2:
                 num += n
             return num
         except:
-            print("No se encontró IVA en factura ")
+            print("No se encontró IVA en factura " + self.name)
             return None
 
 
