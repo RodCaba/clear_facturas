@@ -12,9 +12,10 @@ def main():
     rel = Relacion()
     for file in files:
         fact = FacturaV2(file)
-        rel.a_nombre.append(fact.name)
+        rel.a_folio.append(fact.get_folio())
         rel.a_fecha.append(fact.get_fecha_comprobante())
         rel.a_proveedor.append(fact.get_proveedor_name())
+        rel.a_rfc.append(fact.get_rfc())
         rel.a_subtotal.append(fact.get_subtotal())
         rel.a_iva.append(fact.get_iva())
         try:

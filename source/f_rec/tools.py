@@ -39,6 +39,10 @@ class FacturaV2:
         self.doc = ET.parse(file_name)
         self.name = file_name
 
+    def get_folio(self):
+        root = self.doc.getroot()
+        return root.attrib.get("Folio")
+
     def get_fecha_comprobante(self):
         root = self.doc.getroot()
         return root.attrib.get("Fecha")
@@ -48,6 +52,12 @@ class FacturaV2:
         emisor_tag = [children for children in root if "Emisor" in children.tag]
         emisor = emisor_tag[0]
         return emisor.attrib.get("Nombre")
+
+    def get_rfc(self):
+        root = self.doc.getroot()
+        emisor_tag = [children for children in root if "Emisor" in children.tag]
+        emisor = emisor_tag[0]
+        return emisor.attrib.get("Rfc")
 
     def get_subtotal(self):
         root = self.doc.getroot()
@@ -98,9 +108,10 @@ class FacturaV2:
 class Relacion:
 
     def __init__(self):
-        self.a_nombre = []
+        self.a_folio = []
         self.a_fecha = []
         self.a_proveedor = []
+        self.a_rfc = []
         self.a_subtotal = []
         self.a_iva = []
         self.a_o_impuestos = []
@@ -109,9 +120,10 @@ class Relacion:
 
     def crear_df(self):
         data = {
-            'Nombre': self.a_nombre,
+            'Folio': self.a_folio,
             'Fecha': self.a_fecha,
             'Proveedor': self.a_proveedor,
+            'RFC': self.a_rfc,
             'Subtotal': self.a_subtotal,
             'IVA': self.a_iva,
             'Otros Impuestos': self.a_o_impuestos,

@@ -5,7 +5,7 @@ block_cipher = None
 
 
 a = Analysis(['main.py'],
-             pathex=['C:\\Users\\rodse\\PycharmProjects\\facturas_emitidas'],
+             pathex=['C:\\Users\\Mario\\Documents\\Clear\\Facturas\\app\\clear_facturas\\source'],
              binaries=[],
              datas=[],
              hiddenimports=[],
@@ -37,4 +37,4 @@ exe = EXE(pyz,
           disable_windowed_traceback=False,
           target_arch=None,
           codesign_identity=None,
-          entitlements_file=None , icon='C:\\Users\\rodse\\PycharmProjects\\facturas_emitidas\\favicon.ico')
+          entitlements_file=None , icon='favicon.ico')
